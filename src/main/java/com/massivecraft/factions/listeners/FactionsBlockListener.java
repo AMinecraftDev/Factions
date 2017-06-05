@@ -4,6 +4,7 @@ import com.massivecraft.factions.*;
 import com.massivecraft.factions.integration.Worldguard;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Relation;
+import com.massivecraft.factions.zcore.persist.MemoryAccess;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -53,11 +54,9 @@ public class FactionsBlockListener implements Listener {
                     return;
                 }
                 // from faction != to faction
-                if (to.isNormal()) {
-                    if (from.isNormal() && from.getRelationTo(to).isAlly()) {
-                        return;
-                    }
+                if(to.isWarZone() || to.isSafeZone()) {
                     event.setCancelled(true);
+                    return;
                 }
             }
         }
@@ -247,6 +246,12 @@ public class FactionsBlockListener implements Listener {
             return false;
         }
         if (P.p.getConfig().getBoolean("hcf.raidable", false) && otherFaction.getLandRounded() >= otherFaction.getPowerRounded()) {
+            return true;
+        }
+
+        Access access = new MemoryAccess(loc);
+
+        if(access.getFactionsWithAccess().contains(me.getFaction()) || access.getPlayersWithAccess().contains(player)) {
             return true;
         }
 

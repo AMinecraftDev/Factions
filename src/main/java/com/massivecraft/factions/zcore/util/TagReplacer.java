@@ -1,5 +1,6 @@
 package com.massivecraft.factions.zcore.util;
 
+import com.earth2me.essentials.Essentials;
 import com.massivecraft.factions.*;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.struct.Relation;
@@ -7,9 +8,7 @@ import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Link between config and in-game messages<br> Changes based on faction / player<br> Interfaces the config lists with
@@ -20,6 +19,7 @@ public enum TagReplacer {
     /**
      * Fancy variables, used by f show
      */
+    TRUCES_LIST(TagType.FANCY, "{truces-list}"),
     ALLIES_LIST(TagType.FANCY, "{allies-list}"),
     ONLINE_LIST(TagType.FANCY, "{online-list}"),
     ENEMIES_LIST(TagType.FANCY, "{enemies-list}"),
@@ -66,6 +66,7 @@ public enum TagReplacer {
     ENEMIES_COUNT(TagType.FACTION, "{enemies}"),
     ONLINE_COUNT(TagType.FACTION, "{online}"),
     OFFLINE_COUNT(TagType.FACTION, "{offline}"),
+    TRUCE_COUNT(TagType.FACTION, "{truces}"),
     FACTION_SIZE(TagType.FACTION, "{members}"),
     FACTION_KILLS(TagType.FACTION, "{faction-kills}"),
     FACTION_DEATHS(TagType.FACTION, "{faction-deaths}"),
@@ -76,9 +77,11 @@ public enum TagReplacer {
     MAX_WARPS(TagType.GENERAL, "{max-warps}"),
     MAX_ALLIES(TagType.GENERAL, "{max-allies}"),
     MAX_ENEMIES(TagType.GENERAL, "{max-enemies}"),
+    MAX_TRUCES(TagType.GENERAL, "{max-truces}"),
     FACTIONLESS(TagType.GENERAL, "{factionless}"),
     TOTAL_ONLINE(TagType.GENERAL, "{total-online}");
 
+    private static Essentials essentials;
     private TagType type;
     private String tag;
 
@@ -115,6 +118,11 @@ public enum TagReplacer {
             case MAX_ENEMIES:
                 if (P.p.getConfig().getBoolean("max-relations.enabled", true)) {
                     return String.valueOf(P.p.getConfig().getInt("max-relations.enemy", 10));
+                }
+                return TL.GENERIC_INFINITY.toString();
+            case MAX_TRUCES:
+                if (P.p.getConfig().getBoolean("max-relations.enabled", true)) {
+                    return String.valueOf(P.p.getConfig().getInt("max-relations.truce", 10));
                 }
                 return TL.GENERIC_INFINITY.toString();
             case MAX_WARPS:
@@ -215,9 +223,39 @@ public enum TagReplacer {
             case ENEMIES_COUNT:
                 return String.valueOf(fac.getRelationCount(Relation.ENEMY));
             case ONLINE_COUNT:
-                return String.valueOf(fac.getOnlinePlayers().size());
+                Set<FPlayer> set = fac.getFPlayersWhereOnline(true);
+                Set<FPlayer> newSet = new HashSet<FPlayer>();
+
+                for(FPlayer fPlayer : set) {
+                    if(essentials == null) {
+                        essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
+                    }
+
+                    if(essentials.getUser(fPlayer.getPlayer()).isVanished()) continue;
+
+                    newSet.add(fPlayer);
+                }
+
+                return String.valueOf(newSet.size());
             case OFFLINE_COUNT:
-                return String.valueOf(fac.getFPlayers().size() - fac.getOnlinePlayers().size());
+                Set<FPlayer> offlineSet = fac.getFPlayers();
+                Set<FPlayer> newOfflineSet = new HashSet<FPlayer>();
+
+                for(FPlayer fPlayer : offlineSet) {
+                    if(essentials == null) {
+                        essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
+                    }
+
+                    if(fPlayer.isOnline()) {
+                        if(!essentials.getUser(fPlayer.getPlayer()).isVanished()) continue;
+                    }
+
+                    newOfflineSet.add(fPlayer);
+                }
+
+                return String.valueOf(newOfflineSet.size());
+            case TRUCE_COUNT:
+                return String.valueOf(fac.getRelationCount(Relation.TRUCE));
             case FACTION_SIZE:
                 return String.valueOf(fac.getFPlayers().size());
             case FACTION_KILLS:

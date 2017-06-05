@@ -10,6 +10,7 @@ import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.VisualizeUtil;
+import com.massivecraft.factions.zcore.persist.MemoryAccess;
 import com.massivecraft.factions.zcore.persist.MemoryFPlayer;
 import com.massivecraft.factions.zcore.util.TL;
 import com.massivecraft.factions.zcore.util.TextUtil;
@@ -387,6 +388,11 @@ public class FactionsPlayerListener implements Listener {
         Material material = block.getType();
         FLocation loc = new FLocation(block);
         Faction otherFaction = Board.getInstance().getFactionAt(loc);
+        Access access = new MemoryAccess(loc);
+
+        if(access.getFactionsWithAccess().contains(me.getFaction()) || access.getPlayersWithAccess().contains(player)) {
+            return true;
+        }
 
         // no door/chest/whatever protection in wilderness, war zones, or safe zones
         if (!otherFaction.isNormal()) {
@@ -486,7 +492,7 @@ public class FactionsPlayerListener implements Listener {
     }
 
     public static boolean preventCommand(String fullCmd, Player player) {
-        if ((Conf.territoryNeutralDenyCommands.isEmpty() && Conf.territoryEnemyDenyCommands.isEmpty() && Conf.permanentFactionMemberDenyCommands.isEmpty() && Conf.warzoneDenyCommands.isEmpty())) {
+        if ((Conf.territoryTruceDenyCommands.isEmpty() && Conf.territoryNeutralDenyCommands.isEmpty() && Conf.territoryEnemyDenyCommands.isEmpty() && Conf.permanentFactionMemberDenyCommands.isEmpty() && Conf.warzoneDenyCommands.isEmpty())) {
             return false;
         }
 
@@ -520,7 +526,12 @@ public class FactionsPlayerListener implements Listener {
         Relation rel = at.getRelationTo(me);
         if (at.isNormal() && rel.isAlly() && !Conf.territoryAllyDenyCommands.isEmpty() && !me.isAdminBypassing() && isCommandInList(fullCmd, shortCmd, Conf.territoryAllyDenyCommands.iterator())) {
             me.msg(TL.PLAYER_COMMAND_ALLY, fullCmd);
-            return false;
+            return true;
+        }
+
+        if (at.isNormal() && rel.isTruce() && !Conf.territoryTruceDenyCommands.isEmpty() && !me.isAdminBypassing() && isCommandInList(fullCmd, shortCmd, Conf.territoryTruceDenyCommands.iterator())) {
+            me.msg(TL.PLAYER_COMMAND_TRUCE, fullCmd);
+            return true;
         }
 
         if (at.isNormal() && rel.isNeutral() && !Conf.territoryNeutralDenyCommands.isEmpty() && !me.isAdminBypassing() && isCommandInList(fullCmd, shortCmd, Conf.territoryNeutralDenyCommands.iterator())) {

@@ -30,6 +30,7 @@ public class CmdShow extends FCommand {
         defaults.add("<a>Land value: <i>{land-value} {land-refund}");
         defaults.add("<a>Balance: <i>{balance}");
         defaults.add("<a>Allies(<i>{allies}<a>/<i>{max-allies}<a>): {allies-list}");
+        defaults.add("<a>Truces(<i>{truces}<a>/<i>{max-truces}<a>): {truces-list}");
         defaults.add("<a>Online: (<i>{online}<a>/<i>{members}<a>): {online-list}");
         defaults.add("<a>Offline: (<i>{offline}<a>/<i>{members}<a>): {offline-list}");
 
@@ -87,6 +88,7 @@ public class CmdShow extends FCommand {
             if (parsed == null) {
                 continue; // Due to minimal f show.
             }
+
             if (TagUtil.hasFancy(parsed)) {
                 List<FancyMessage> fancy = TagUtil.parseFancy(faction, fme, parsed);
                 if (fancy != null) {

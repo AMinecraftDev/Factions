@@ -93,6 +93,8 @@ public abstract class MemoryBoard extends Board {
     public void removeAt(FLocation flocation) {
         Faction faction = getFactionAt(flocation);
         Iterator<LazyLocation> it = faction.getWarps().values().iterator();
+        Access access = new MemoryAccess(flocation);
+
         while (it.hasNext()) {
             if (flocation.isInChunk(it.next().getLocation())) {
                 it.remove();
@@ -100,6 +102,7 @@ public abstract class MemoryBoard extends Board {
         }
         clearOwnershipAt(flocation);
         flocationIds.remove(flocation);
+        access.clearOnUnclaim();
     }
 
     public Set<FLocation> getAllClaims(String factionId) {
@@ -131,6 +134,12 @@ public abstract class MemoryBoard extends Board {
         if (faction != null && faction.isNormal()) {
             faction.clearAllClaimOwnership();
             faction.clearWarps();
+
+            for(FLocation location : faction.getAllClaims()) {
+                Access access = new MemoryAccess(location);
+
+                access.clearOnUnclaim();
+            }
         }
         clean(factionId);
     }

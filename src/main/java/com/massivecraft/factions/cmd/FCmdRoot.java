@@ -8,6 +8,7 @@ import java.util.Collections;
 
 public class FCmdRoot extends FCommand {
 
+    public CmdAccess cmdAccess = new CmdAccess();
     public CmdAdmin cmdAdmin = new CmdAdmin();
     public CmdAutoClaim cmdAutoClaim = new CmdAutoClaim();
     public CmdBoom cmdBoom = new CmdBoom();
@@ -42,6 +43,7 @@ public class FCmdRoot extends FCommand {
     public CmdRelationAlly cmdRelationAlly = new CmdRelationAlly();
     public CmdRelationEnemy cmdRelationEnemy = new CmdRelationEnemy();
     public CmdRelationNeutral cmdRelationNeutral = new CmdRelationNeutral();
+    public CmdRelationTruce cmdRelationTruce = new CmdRelationTruce();
     public CmdReload cmdReload = new CmdReload();
     public CmdSafeunclaimall cmdSafeunclaimall = new CmdSafeunclaimall();
     public CmdSaveAll cmdSaveAll = new CmdSaveAll();
@@ -91,6 +93,7 @@ public class FCmdRoot extends FCommand {
 
         //this.subCommands.add(p.cmdHelp);
 
+        this.addSubCommand(this.cmdAccess);
         this.addSubCommand(this.cmdAdmin);
         this.addSubCommand(this.cmdAutoClaim);
         this.addSubCommand(this.cmdBoom);
@@ -126,6 +129,7 @@ public class FCmdRoot extends FCommand {
         this.addSubCommand(this.cmdRelationAlly);
         this.addSubCommand(this.cmdRelationEnemy);
         this.addSubCommand(this.cmdRelationNeutral);
+        this.addSubCommand(this.cmdRelationTruce);
         this.addSubCommand(this.cmdReload);
         this.addSubCommand(this.cmdSafeunclaimall);
         this.addSubCommand(this.cmdSaveAll);
@@ -152,6 +156,7 @@ public class FCmdRoot extends FCommand {
         this.addSubCommand(this.cmdClaimLine);
         this.addSubCommand(this.cmdTop);
         this.addSubCommand(this.cmdAHome);
+
         if (P.p.isHookedPlayervaults()) {
             P.p.log("Found playervaults hook, adding /f vault and /f setmaxvault commands.");
             this.addSubCommand(new CmdSetMaxVaults());

@@ -7,6 +7,7 @@ import com.massivecraft.factions.Board;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Factions;
+import com.massivecraft.factions.zcore.persist.MemoryAccess;
 import com.massivecraft.factions.zcore.persist.SaveTask;
 import com.massivecraft.factions.zcore.util.PermUtil;
 import com.massivecraft.factions.zcore.util.Persist;
@@ -114,6 +115,8 @@ public abstract class MPlugin extends JavaPlugin {
     }
 
     public void postEnable() {
+        MemoryAccess.setupAccessFile(this);
+
         log("=== ENABLE DONE (Took " + (System.currentTimeMillis() - timeEnableStart) + "ms) ===");
     }
 

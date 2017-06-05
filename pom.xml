@@ -15,7 +15,7 @@
 
     <build>
         <defaultGoal>clean package install</defaultGoal>
-        <finalName>${project.name}</finalName>
+        <finalName>${project.name}-${version}</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
             <resource>

@@ -1,12 +1,14 @@
 package com.massivecraft.factions.zcore.util;
 
 
+import com.earth2me.essentials.Essentials;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.P;
 import com.massivecraft.factions.util.MiscUtil;
 import mkremins.fanciful.FancyMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import static com.massivecraft.factions.zcore.util.TagReplacer.TagType;
 public class TagUtil {
 
     private static final int ARBITRARY_LIMIT = 25000;
+    private static Essentials essentials = null;
 
     /**
      * Replaces all variables in a plain raw line for a faction
@@ -90,8 +93,9 @@ public class TagUtil {
      */
     public static List<FancyMessage> parseFancy(Faction faction, FPlayer fme, String line) {
         for (TagReplacer tagReplacer : TagReplacer.getByType(TagType.FANCY)) {
-            if (tagReplacer.contains(line)) {
+            if (line.contains(tagReplacer.getTag())) {
                 String clean = line.replace(tagReplacer.getTag(), ""); // remove tag
+
                 return getFancy(faction, fme, tagReplacer, clean);
             }
         }
@@ -148,6 +152,26 @@ public class TagUtil {
                 }
                 fancyMessages.add(currentAllies);
                 return firstAlly && minimal ? null : fancyMessages; // we must return here and not outside the switch
+            case TRUCES_LIST:
+                FancyMessage currentTruces = P.p.txt.parseFancy(prefix);
+                boolean firstTruce = true;
+                for (Faction otherFaction : Factions.getInstance().getAllFactions()) {
+                    if (otherFaction == target) {
+                        continue;
+                    }
+                    String s = otherFaction.getTag(fme);
+                    if (otherFaction.getRelationTo(target).isTruce()) {
+                        currentTruces.then(firstTruce ? s : ", " + s);
+                        currentTruces.tooltip(tipFaction(otherFaction)).color(fme.getColorTo(otherFaction));
+                        firstTruce = false;
+                        if (currentTruces.toJSONString().length() > ARBITRARY_LIMIT) {
+                            fancyMessages.add(currentTruces);
+                            currentTruces = new FancyMessage("");
+                        }
+                    }
+                }
+                fancyMessages.add(currentTruces);
+                return firstTruce && minimal ? null : fancyMessages; // we must return here and not outside the switch
             case ENEMIES_LIST:
                 FancyMessage currentEnemies = P.p.txt.parseFancy(prefix);
                 boolean firstEnemy = true;
@@ -172,6 +196,12 @@ public class TagUtil {
                 FancyMessage currentOnline = P.p.txt.parseFancy(prefix);
                 boolean firstOnline = true;
                 for (FPlayer p : MiscUtil.rankOrder(target.getFPlayersWhereOnline(true))) {
+                    if(essentials == null) {
+                        essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
+                    }
+
+                    if(essentials.getUser(p.getPlayer()).isVanished()) continue;
+
                     String name = p.getNameAndTitle();
                     currentOnline.then(firstOnline ? name : ", " + name);
                     currentOnline.tooltip(tipPlayer(p)).color(fme.getColorTo(p));
@@ -188,7 +218,22 @@ public class TagUtil {
                 boolean firstOffline = true;
                 for (FPlayer p : MiscUtil.rankOrder(target.getFPlayers())) {
                     String name = p.getNameAndTitle();
-                    if (!p.isOnline()) {
+
+                    if(essentials == null) {
+                        essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
+                    }
+
+                    if(p.isOnline()) {
+                        if(!essentials.getUser(p.getPlayer()).isVanished()) continue;
+
+                        currentOffline.then(firstOffline ? name : ", " + name);
+                        currentOffline.tooltip(tipPlayer(p)).color(fme.getColorTo(p));
+                        firstOffline = false;
+                        if (currentOffline.toJSONString().length() > ARBITRARY_LIMIT) {
+                            fancyMessages.add(currentOffline);
+                            currentOffline = new FancyMessage("");
+                        }
+                    } else {
                         currentOffline.then(firstOffline ? name : ", " + name);
                         currentOffline.tooltip(tipPlayer(p)).color(fme.getColorTo(p));
                         firstOffline = false;

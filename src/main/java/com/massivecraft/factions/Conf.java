@@ -139,6 +139,7 @@ public class Conf {
 
     // if someone is doing a radius claim and the process fails to claim land this many times in a row, it will exit
     public static int radiusClaimFailureLimit = 9;
+    public static int radiusOwnerFailureLimit = 9;
 
     public static double considerFactionsReallyOfflineAfterXMinutes = 0.0;
 
@@ -149,6 +150,7 @@ public class Conf {
 
     // commands which will be prevented when in claimed territory of another faction
     public static Set<String> territoryNeutralDenyCommands = new LinkedHashSet<String>();
+    public static Set<String> territoryTruceDenyCommands = new LinkedHashSet<String>();
     public static Set<String> territoryEnemyDenyCommands = new LinkedHashSet<String>();
     public static Set<String> territoryAllyDenyCommands = new LinkedHashSet<String>();
     public static Set<String> warzoneDenyCommands = new LinkedHashSet<String>();

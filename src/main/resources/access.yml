@@ -1,0 +1,13 @@
+# DON'T TOUCH THIS FILE, IT HANDLES ALL /f access SAVES
+#
+# An example layout is:
+#
+# [world,0,0]:
+#   P:
+#   - RandomPlayer1
+#   - RandomPlayer2
+#   F:
+#   - RandomFaction1
+#   - RandomFaction2
+#
+# =================================================================== #

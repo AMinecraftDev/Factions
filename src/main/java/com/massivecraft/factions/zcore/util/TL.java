@@ -50,6 +50,33 @@ public enum TL {
     /**
      * Command translations
      */
+    COMMAND_ACCESS_DESCRIPTION("Give specific factions or members access to your land."),
+    COMMAND_ACCESS_NOTYOURLAND("&cYou must own the chunk you are trying to edit."),
+    COMMAND_ACCESS_NOONEHASACCESS("&cNobody has access to this chunk."),
+    COMMAND_ACCESS_NONE_REMOVED("&c&l(!) &c&n{s}&c no longer has access to any of your land."),
+    COMMAND_ACCESS_NONE_RECEIVED("&c&l(!) &cYou no longer have access to any of &n{faction}'s&c land."),
+    COMMAND_ACCESS_ALL_PLAYER("&a&l(!) &aThe player {player} now has access to all of your land!"),
+    COMMAND_ACCESS_ALL_FACTION("&e&l(!) &eThe faction {faction} now has access to all of your land!"),
+    COMMAND_ACCESS_ALL_RECEIVED("&e&l(!) &eYou now have access to all of {faction}s land!"),
+    COMMAND_ACCESS_NO_PLAYERNOACCESS("&cThat player does not have access to this chunk."),
+    COMMAND_ACCESS_NO_PLAYERREMOVED("&c&l(!) &cThe player {player} no longer has access to the chunk {location}!"),
+    COMMAND_ACCESS_NO_FACTIONNOACCESS("&cThat faction does not have access to this chunk."),
+    COMMAND_ACCESS_NO_FACTIONREMOVED("&c&l(!) &cThe faction {faction} no longer has access to the chunk {location}!"),
+    COMMAND_ACCESS_NO_RECEIVED("&c&l(!) &cYou no longer have access to {faction}'s claim at {location}!"),
+    COMMAND_ACCESS_YES_PLAYERALREADY("&cThat player already has access to this chunk."),
+    COMMAND_ACCESS_YES_PLAYERADDED("&a&l(!) &aThe player {player} now has access to the claim {location}!."),
+    COMMAND_ACCESS_YES_FACTIONALREADY("&cThat faction already has access to this chunk."),
+    COMMAND_ACCESS_YES_FACTIONADDED("&a&l(!) &aThe faction {faction} now has access to the claim {location}!"),
+    COMMAND_ACCESS_YES_RECEIVED("&a&l(!) &aYou now have access to {faction}'s claim at {location}!"),
+    COMMAND_ACCESS_CLEAR("&cAll access has been cleared from this chunk."),
+    COMMAND_ACCESS_LIST(
+            "&6_________________.[ &b&lAccess List &6]._________________\n" +
+            "&bFactions w/ Access (&f{famount}&b):\n" +
+            "&7{flist}\n" +
+            "&7\n" +
+            "&bPlayers w/ Access (&f{pamount}&b):\n" +
+            "&7{plist}"),
+
     COMMAND_ADMIN_NOTMEMBER("%1$s<i> is not a member in your faction."),
     COMMAND_ADMIN_NOTADMIN("<b>You are not the faction admin."),
     COMMAND_ADMIN_TARGETSELF("<b>The target player musn't be yourself."),
@@ -345,9 +372,11 @@ public enum TL {
     COMMAND_OWNER_NOTMEMBER("%1$s<i> is not a member of this faction."),
     COMMAND_OWNER_CLEARED("<i>You have cleared ownership for this claimed area."),
     COMMAND_OWNER_REMOVED("<i>You have removed ownership of this claimed land from %1$s<i>."),
+    COMMAND_OWNER_REMOVEDRADIUS("<i>You have removed {p} from ownership of all claimed chunks in a {i} radius."),
     COMMAND_OWNER_TOSET("to set ownership of claimed land"),
     COMMAND_OWNER_FORSET("for setting ownership of claimed land"),
     COMMAND_OWNER_ADDED("<i>You have added %1$s<i> to the owner list for this claimed land."),
+    COMMAND_OWNER_ADDEDRADIUS("<i>You have added {p}<i> to the owner list for all claimed land in a {i} radius."),
     COMMAND_OWNER_DESCRIPTION("Set ownership of claimed land"),
 
     COMMAND_OWNERLIST_DISABLED("<b>Sorry, but owned areas are disabled on this server."),//dup->
@@ -675,6 +704,7 @@ public enum TL {
     PLAYER_COMMAND_ENEMY("<b>You can't use the command '%s' in enemy territory."),
     PLAYER_COMMAND_PERMANENT("<b>You can't use the command '%s' because you are in a permanent faction."),
     PLAYER_COMMAND_ALLY("<b>You can't use the command '%s' in ally territory."),
+    PLAYER_COMMAND_TRUCE("<b>You can't use the command '%s' in truce territory."),
     PLAYER_COMMAND_WILDERNESS("<b>You can't use the command '%s' in the wilderness."),
 
     PLAYER_POWER_NOLOSS_PEACEFUL("<i>You didn't lose any power since you are in a peaceful faction."),
