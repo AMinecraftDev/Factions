@@ -282,6 +282,7 @@ public abstract class MemoryBoard extends Board {
                         row += ChatColor.DARK_RED + "+";
                     } else if (factionHere == faction ||
                                        factionHere == factionLoc ||
+                                       relation.equals(Relation.TRUCE) ||
                                        relation.isAtLeast(Relation.ALLY) ||
                                        (Conf.showNeutralFactionsOnMap && relation.equals(Relation.NEUTRAL)) ||
                                        (Conf.showEnemyFactionsOnMap && relation.equals(Relation.ENEMY))) {
