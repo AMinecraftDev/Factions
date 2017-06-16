@@ -252,7 +252,7 @@ public class MemoryAccess implements Access {
         if(currentChunkOnly) {
             chunksTargetted.add(fLocation);
         } else {
-            chunksTargetted.addAll(faction.getAllClaims());
+            chunksTargetted.addAll(this.faction.getAllClaims());
         }
 
         for(FLocation fLocation : chunksTargetted) {

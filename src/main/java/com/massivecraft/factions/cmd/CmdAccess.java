@@ -54,6 +54,8 @@ public class CmdAccess extends FCommand {
             return;
         }
 
+
+
         String target = this.argAsString(0);
         Access access = new MemoryAccess(fLocation, myFaction, fme);
 
